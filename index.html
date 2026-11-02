@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تناسق | مستشارتك في الأناقة</title>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FBF7F2;
+    --wine:#6B2737;
+    --wine-dark:#4A1B26;
+    --gold:#C9A227;
+    --charcoal:#2E2A2B;
+    --blush:#E8C4C4;
+    --sage:#7C8B6F;
+    --line: rgba(46,42,43,0.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--charcoal);
+    font-family:'Tajawal', sans-serif;
+    min-height:100vh;
+    padding:0;
+  }
+  .stitch{
+    border:none;
+    border-top:2px dashed var(--gold);
+    opacity:0.55;
+    margin:28px 0;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:32px 20px 80px;}
+  header.hero{
+    text-align:center;
+    padding:36px 20px 24px;
+  }
+  header.hero .eyebrow{
+    font-size:13px;
+    letter-spacing:2px;
+    color:var(--wine);
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  header.hero .eyebrow::before, header.hero .eyebrow::after{
+    content:"";
+    width:28px; height:1px; background:var(--gold);
+  }
+  header.hero h1{
+    font-family:'Aref Ruqaa', serif;
+    font-size:52px;
+    color:var(--wine-dark);
+    margin-top:10px;
+    line-height:1.3;
+  }
+  header.hero p.tag{
+    margin-top:8px;
+    color:#5b5556;
+    font-size:15px;
+    font-weight:400;
+  }
+  .screen{display:none; animation:fadeIn .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:26px 24px;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute; top:10px; bottom:10px; right:0;
+    width:3px; background:var(--wine);
+    border-radius:3px;
+  }
+  h2.section-title{
+    font-family:'Aref Ruqaa', serif;
+    font-size:26px;
+    color:var(--wine-dark);
+    margin-bottom:6px;
+  }
+  p.section-sub{
+    font-size:14px;
+    color:#6b6465;
+    margin-bottom:22px;
+  }
+  label.field-label{
+    display:block;
+    font-size:14px;
+    font-weight:700;
+    color:var(--charcoal);
+    margin-bottom:10px;
+    margin-top:20px;
+  }
+  label.field-label:first-of-type{margin-top:0;}
+
+  .chips{display:flex; flex-wrap:wrap; gap:10px;}
+  .chip{
+    padding:9px 16px;
+    border:1.5px solid var(--line);
+    border-radius:30px;
+    font-size:14px;
+    cursor:pointer;
+    background:#fff;
+    transition:.15s;
+    user-select:none;
+  }
+  .chip:hover{border-color:var(--gold);}
+  .chip.selected{
+    background:var(--wine);
+    color:#fff;
+    border-color:var(--wine);
+  }
+
+  .row2{display:flex; gap:14px;}
+  .row2 > div{flex:1;}
+  input[type=text], input[type=number], textarea{
+    width:100%;
+    padding:11px 14px;
+    border:1.5px solid var(--line);
+    border-radius:4px;
+    font-family:'Tajawal', sans-serif;
+    font-size:14px;
+    background:#fffdfb;
+  }
+  input:focus, textarea:focus{outline:2px solid var(--gold); outline-offset:1px;}
+  textarea{resize:vertical; min-height:70px;}
+
+  button.primary{
+    margin-top:26px;
+    width:100%;
+    padding:15px;
+    background:var(--wine);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    font-family:'Tajawal', sans-serif;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    letter-spacing:.5px;
+    transition:.15s;
+  }
+  button.primary:hover{background:var(--wine-dark);}
+  button.primary:disabled{background:#b9a6ab; cursor:wait;}
+
+  .profile-pill{
+    display:flex; align-items:center; justify-content:space-between;
+    background:#fff; border:1px solid var(--line); border-radius:30px;
+    padding:8px 18px; font-size:13px; margin-bottom:22px;
+  }
+
+  .loader{
+    text-align:center; padding:50px 10px;
+  }
+  .thread{
+    width:60px; height:60px; margin:0 auto 18px;
+    border:3px dashed var(--gold);
+    border-radius:50%;
+    animation:spin 2.2s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loader p{color:#6b6465; font-size:14px;}
+
+  .result-card{margin-top:22px;}
+  .result-card h3{
+    font-family:'Aref Ruqaa', serif;
+    color:var(--wine-dark);
+    font-size:22px;
+    margin-bottom:14px;
+  }
+  .looks-grid{display:grid; gap:22px; margin-top:22px;}
+  .look-option{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:18px;
+  }
+  .look-option h4{
+    color:var(--wine-dark);
+    font-family:'Aref Ruqaa', serif;
+    font-size:20px;
+    margin-bottom:14px;
+  }
+  .product-grid{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px;}
+  .product-card{
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    overflow:hidden;
+    background:#fffdfb;
+    border:1px solid var(--line);
+    border-radius:5px;
+  }
+  .product-image{
+    width:100%;
+    aspect-ratio:1 / 1.12;
+    object-fit:cover;
+    background:#f1e9e2;
+  }
+  .product-info{display:flex; flex:1; flex-direction:column; padding:10px;}
+  .product-type{color:var(--gold); font-size:11px; font-weight:700; margin-bottom:5px;}
+  .product-name{
+    color:var(--charcoal);
+    font-size:13px;
+    line-height:1.45;
+    min-height:38px;
+  }
+  .product-price{color:var(--sage); font-size:12px; font-weight:700; margin:8px 0 10px;}
+  .buy-button{
+    display:block;
+    margin-top:auto;
+    padding:9px 6px;
+    border-radius:3px;
+    background:var(--wine);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    text-align:center;
+    text-decoration:none;
+  }
+  .buy-button:hover{background:var(--wine-dark);}
+  @media (max-width:600px){
+    .product-grid{grid-template-columns:1fr;}
+    .product-card{display:grid; grid-template-columns:110px 1fr;}
+    .product-image{height:100%; min-height:150px; aspect-ratio:auto;}
+  }
+  .history-item{
+    padding:14px 16px; background:#fff; border:1px solid var(--line); border-radius:4px;
+    margin-top:12px; font-size:13px; cursor:pointer;
+  }
+  .history-item:hover{border-color:var(--gold);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">مستشارة الأناقة الخاصة بك</div>
+    <h1>تناسق</h1>
+    <p class="tag">قياساتك، مناسبتك، ميزانيتك — وتنسيق واحد يليق بها كلها</p>
+  </header>
+
+  <div class="screen active" id="screen-welcome">
+    <div class="card">
+      <h2 class="section-title">قبل ما نبدأ</h2>
+      <p class="section-sub">عشان أرشح لك تنسيقات تليق بجسمك فعلاً، أحتاج أعرف بعض المعلومات عنك أول مرة بس. بعدها ما راح أسألك عنها كل مرة.</p>
+      <button class="primary" onclick="goTo('profile')">لنبدأ ✦</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-profile">
+    <div class="card">
+      <h2 class="section-title">قياساتك وشكل جسمك</h2>
+      <p class="section-sub">هذا يساعدني أرشح لك القصّات والألوان الي تبرز جمال جسمك.</p>
+
+      <label class="field-label">شكل الجسم</label>
+      <div class="chips" id="bodyShapeChips">
+        <div class="chip" data-v="كمثري">كمثري</div>
+        <div class="chip" data-v="ساعة رملية">ساعة رملية</div>
+        <div class="chip" data-v="تفاحة">تفاحة</div>
+        <div class="chip" data-v="مستطيل">مستطيل</div>
+        <div class="chip" data-v="مثلث مقلوب">مثلث مقلوب</div>
+        <div class="chip" data-v="مو متأكدة">مو متأكدة</div>
+      </div>
+
+      <div class="row2">
+        <div>
+          <label class="field-label">الطول (سم)</label>
+          <input type="number" id="height" placeholder="مثال: 162">
+        </div>
+        <div>
+          <label class="field-label">المقاس المعتاد</label>
+          <input type="text" id="size" placeholder="مثال: M أو 40">
+        </div>
+      </div>
+
+      <label class="field-label">درجة لون البشرة (اختياري، يفيد في اختيار الألوان)</label>
+      <div class="chips" id="skinToneChips">
+        <div class="chip" data-v="فاتحة باردة">فاتحة باردة</div>
+        <div class="chip" data-v="فاتحة دافئة">فاتحة دافئة</div>
+        <div class="chip" data-v="متوسطة">متوسطة</div>
+        <div class="chip" data-v="سمراء">سمراء</div>
+        <div class="chip" data-v="داكنة">داكنة</div>
+      </div>
+
+      <button class="primary" onclick="saveProfile()">حفظ ومتابعة</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-main">
+    <div class="profile-pill">
+      <span id="profileSummary"></span>
+      <span onclick="goTo('profile')" style="cursor:pointer; color:var(--wine); font-weight:700;">تعديل</span>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">وش المناسبة؟</h2>
+      <p class="section-sub">صفي لي الإطلالة الي تبينها وراح أرشح لك القماش، الألوان، والتنسيق الكامل.</p>
+
+      <label class="field-label">المناسبة</label>
+      <div class="chips" id="occasionChips">
+        <div class="chip" data-v="زواج">زواج</div>
+        <div class="chip" data-v="خطوبة">خطوبة</div>
+        <div class="chip" data-v="مناسبة رسمية">مناسبة رسمية</div>
+        <div class="chip" data-v="عمل">عمل</div>
+        <div class="chip" data-v="كاجوال">كاجوال</div>
+        <div class="chip" data-v="سفر">سفر</div>
+      </div>
+
+      <div id="casualTypeWrap" style="display:none;">
+        <label class="field-label">نوع القطعة (للإطلالة الكاجوال)</label>
+        <div class="chips" id="casualTypeChips">
+          <div class="chip" data-v="بنطلون وبلوزة">بنطلون وبلوزة</div>
+          <div class="chip" data-v="تنورة وبلوزة">تنورة وبلوزة</div>
+          <div class="chip" data-v="فستان">فستان</div>
+        </div>
+      </div>
+
+      <label class="field-label">الفصل</label>
+      <div class="chips" id="seasonChips">
+        <div class="chip" data-v="صيف">صيف</div>
+        <div class="chip" data-v="شتاء">شتاء</div>
+        <div class="chip" data-v="ربيع">ربيع</div>
+        <div class="chip" data-v="خريف">خريف</div>
+      </div>
+
+      <label class="field-label">الميزانية (ريال سعودي)</label>
+      <div class="row2">
+        <div><input type="number" id="budgetMin" placeholder="من"></div>
+        <div><input type="number" id="budgetMax" placeholder="إلى"></div>
+      </div>
+
+      <label class="field-label">تفضيل البراند</label>
+      <div class="chips" id="brandChips">
+        <div class="chip" data-v="بدون تفضيل">بدون تفضيل</div>
+        <div class="chip" data-v="براندات معروفة">براندات معروفة</div>
+        <div class="chip" data-v="محلات بأسعار اقتصادية">محلات اقتصادية</div>
+      </div>
+
+      <label class="field-label">تفاصيل إضافية (اختياري)</label>
+      <textarea id="extraDetails" placeholder="مثال: أبي فستان زواج، ألوانه هادئة، وما أحب اللمعان الكثير"></textarea>
+
+      <button class="primary" onclick="submitRequest()">ابحثي لي عن تنسيق ✦</button>
+    </div>
+
+    <div id="resultArea"></div>
+
+    <div id="historyArea" style="margin-top:30px;"></div>
+  </div>
+
+</div>
+
+<script>
+let profile = {bodyShape:null, height:null, size:null, skinTone:null};
+let history = [];
+
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+screen).classList.add('active');
+}
+
+function setupChips(containerId, multi=false){
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      if(!multi){
+        container.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+      }
+      chip.classList.toggle('selected');
+    });
+  });
+}
+['bodyShapeChips','skinToneChips','occasionChips','seasonChips','brandChips','casualTypeChips'].forEach(id=>setupChips(id));
+
+document.getElementById('occasionChips').addEventListener('click', ()=>{
+  const isCasual = getSelected('occasionChips') === 'كاجوال';
+  document.getElementById('casualTypeWrap').style.display = isCasual ? 'block' : 'none';
+});
+
+function getSelected(containerId){
+  const el = document.getElementById(containerId).querySelector('.chip.selected');
+  return el ? el.dataset.v : null;
+}
+
+function saveProfile(){
+  profile.bodyShape = getSelected('bodyShapeChips') || 'غير محدد';
+  profile.height = document.getElementById('height').value || 'غير محدد';
+  profile.size = document.getElementById('size').value || 'غير محدد';
+  profile.skinTone = getSelected('skinToneChips') || 'غير محدد';
+
+  document.getElementById('profileSummary').innerText =
+    `${profile.bodyShape} ${profile.height!=='غير محدد' ? '· '+profile.height+' سم' : ''} ${profile.size!=='غير محدد' ? '· مقاس '+profile.size : ''}`;
+
+  goTo('main');
+}
+
+async function submitRequest(){
+  const occasion = getSelected('occasionChips');
+  const season = getSelected('seasonChips');
+  const budgetMin = document.getElementById('budgetMin').value;
+  const budgetMax = document.getElementById('budgetMax').value;
+  const brandPref = getSelected('brandChips');
+  const extra = document.getElementById('extraDetails').value;
+  const casualType = occasion === 'كاجوال' ? getSelected('casualTypeChips') : null;
+
+  if(!occasion){ alert('اختاري المناسبة أول'); return; }
+  if(!budgetMin || !budgetMax){ alert('حددي الميزانية عشان أرشح لك بدقة'); return; }
+
+  const searchButton = document.querySelector('button[onclick="submitRequest()"]');
+  if(searchButton){
+    searchButton.disabled = true;
+    searchButton.setAttribute('aria-busy', 'true');
+  }
+
+  const resultArea = document.getElementById('resultArea');
+  resultArea.innerHTML = `
+    <div class="card result-card">
+      <div class="loader" role="status" aria-live="polite">
+        <div class="thread" aria-hidden="true"></div>
+        <h3>جاري البحث عن تنسيقك ✦</h3>
+        <p>قد يستغرق البحث حوالي دقيقة كاملة.</p>
+        <p>أبحث فعليًا عبر الإنترنت عن خيارات مناسبة لك، فلا تقلقي إذا استغرق الرد قليلًا.</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    const response = await fetch('/api/generate-look', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({prompt: buildRequestText(occasion, season, budgetMin, budgetMax, brandPref, extra, casualType)})
+    });
+    const data = await response.json();
+
+    if(!response.ok){
+      throw new Error(data?.error?.message || data?.error || `تعذر إكمال الطلب (${response.status})`);
+    }
+
+    renderLookOptions(data);
+  } catch(error) {
+    if(searchButton){
+      searchButton.disabled = false;
+      searchButton.removeAttribute('aria-busy');
+    }
+    resultArea.innerHTML = `
+      <div class="card result-card">
+        <h3>تعذر إكمال البحث</h3>
+        <p class="section-sub">${escapeHtml(error.message || 'حدث خطأ غير متوقع، حاولي مرة أخرى.')}</p>
+        <button class="primary" onclick="submitRequest()">إعادة المحاولة</button>
+      </div>
+    `;
+  }
+}
+
+function occasionGuidance(occasion, casualType){
+  if(occasion === 'خطوبة'){
+    return 'مستوى فخامة قريب من فساتين الزواج لكن ليس مبالغًا فيه بالكامل — قصّة سهرة راقية بتفاصيل فخمة (تطريز أو ترتر دقيق، قماش تول أو ساتان، ذيل خفيف اختياري)، أقرب لفستان سهرة فاخر جدًا وليس فستان زفاف كامل.';
+  }
+  if(occasion === 'كاجوال' && casualType){
+    return `اقترحي تحديدًا تنسيق "${casualType}" لهذي الإطلالة الكاجوال، وليس فستان فقط إلا لو هذا هو الخيار المختار.`;
+  }
+  return '';
+}
+
+function buildRequestText(occasion, season, budgetMin, budgetMax, brandPref, extra, casualType){
+  const guidance = occasionGuidance(occasion, casualType);
+  return `ابي 3 خيارات تنسيق مختلفة بالمواصفات التالية (مرجعك بالتصميم وتنسيق الألوان: محمد آشي، هنيدة الصيرفي، سعيد قبيسي فقط):
+- شكل الجسم: ${profile.bodyShape || 'غير محدد'}
+- الطول: ${profile.height || 'غير محدد'} سم
+- المقاس: ${profile.size || 'غير محدد'}
+- درجة البشرة: ${profile.skinTone || 'غير محدد'}
+- المناسبة: ${occasion}${casualType ? ' (' + casualType + ')' : ''}
+- الفصل: ${season || 'غير محدد'}
+- الميزانية: من ${budgetMin} إلى ${budgetMax} ريال سعودي
+- تفضيل البراند: ${brandPref || 'بدون تفضيل'}
+- تفاصيل إضافية: ${extra || 'لا يوجد'}
+${guidance ? '\nملاحظة مهمة عن المناسبة: ' + guidance : ''}
+
+مهم جدًا بخصوص الروابط: لما تجيبين رابط أي قطعة، فضّلي دايمًا رابط صفحة المنتج المحدد نفسه (مو رابط قسم عام زي "كل الفساتين"). بس لو ما لقيتي صفحة منتج محددة فعليًا بعد محاولة جادة، استخدمي رابط القسم كحل أخير.
+
+البحث يكون بالأولوية ضمن براندات: H&M، Zara، Bershka، New Yorker، ASOS، فيمي ناين، وأُناس/فارفيتش فقط لو الميزانية تسمح — لكن لو ما لقيتي خيار راقٍ ومناسب بهذي البراندات، ابحثي من مواقع أو متاجر ثانية بشرط تكون الجودة والرقي عاليين؛ الأولوية دائمًا لجودة القطعة ومظهرها الراقي، مو الالتزام الحرفي بالقائمة.
+
+رجعي الرد بصيغة JSON فقط بهذا الشكل بالضبط بدون أي نص إضافي:
+{"options":[{"title":"اسم الخيار","items":[{"type":"dress","name":"اسم القطعة","imageUrl":"رابط صورة حقيقية","productUrl":"رابط الشراء المباشر","price":"السعر التقديري"},{"type":"heels","name":"...","imageUrl":"...","productUrl":"...","price":"..."},{"type":"bag","name":"...","imageUrl":"...","productUrl":"...","price":"..."}]}]}
+(كرري نفس البنية لثلاث خيارات مختلفة داخل مصفوفة options)`;
+}
+
+function storeHome(url){ try { return new URL(url).origin; } catch(e) { return url; } }
+
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#039;'
+  }[char]));
+}
+
+function renderLookOptions(data){
+  const resultArea = document.getElementById('resultArea');
+  const searchButton = document.querySelector('button[onclick="submitRequest()"]');
+  if(searchButton){
+    searchButton.disabled = false;
+    searchButton.removeAttribute('aria-busy');
+  }
+  const labels = {dress:'فستان', heels:'كعب', bag:'شنطة', pants:'بنطلون', blouse:'بلوزة', skirt:'تنورة', shoes:'حذاء'};
+  const options = Array.isArray(data.options) ? data.options.slice(0, 3) : [];
+
+  resultArea.innerHTML = `
+    <div class="card result-card">
+      <div class="looks-grid">
+        ${options.map((option, optionIndex) => `
+          <section class="look-option">
+            <h4>${escapeHtml(option.title || `خيار ${optionIndex + 1}`)}</h4>
+            <div class="product-grid">
+              ${(Array.isArray(option.items) ? option.items : []).map(item => `
+                <article class="product-card">
+                  <img class="product-image" src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" loading="lazy">
+                  <div class="product-info">
+                    <div class="product-type">${escapeHtml(labels[item.type] || 'قطعة')}</div>
+                    <div class="product-name">${escapeHtml(item.name)}</div>
+                    <div class="product-price">${escapeHtml(item.price)}</div>
+                    <a class="buy-button" href="${escapeHtml(storeHome(item.productUrl))}" target="_blank" rel="noopener noreferrer">اشتري</a>
+                  </div>
+                </article>
+              `).join('')}
+            </div>
+          </section>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  resultArea.scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+</body>
+</html>
