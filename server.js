@@ -263,4 +263,4 @@ app.post('/api/generate-look', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 initDb()
   .catch(e => console.error('DB init failed:', e.message))
-  .finally(() => app.listen(PORT, () => console.log('Server running on ' + PORT)));ر
+  .finally(() => app.listen(PORT, () => console.log('Server running on ' + PORT)));
