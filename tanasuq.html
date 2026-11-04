@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تناسق | مستشارتك في الأناقة</title>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FBF7F2;
+    --wine:#6B2737;
+    --wine-dark:#4A1B26;
+    --gold:#C9A227;
+    --charcoal:#2E2A2B;
+    --blush:#E8C4C4;
+    --sage:#7C8B6F;
+    --line: rgba(46,42,43,0.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--charcoal);
+    font-family:'Tajawal', sans-serif;
+    min-height:100vh;
+    padding:0;
+  }
+  .stitch{
+    border:none;
+    border-top:2px dashed var(--gold);
+    opacity:0.55;
+    margin:28px 0;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:32px 20px 80px;}
+  header.hero{
+    text-align:center;
+    padding:36px 20px 24px;
+  }
+  header.hero .eyebrow{
+    font-size:13px;
+    letter-spacing:2px;
+    color:var(--wine);
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  header.hero .eyebrow::before, header.hero .eyebrow::after{
+    content:"";
+    width:28px; height:1px; background:var(--gold);
+  }
+  header.hero h1{
+    font-family:'Aref Ruqaa', serif;
+    font-size:52px;
+    color:var(--wine-dark);
+    margin-top:10px;
+    line-height:1.3;
+  }
+  header.hero p.tag{
+    margin-top:8px;
+    color:#5b5556;
+    font-size:15px;
+    font-weight:400;
+  }
+  .screen{display:none; animation:fadeIn .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:26px 24px;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute; top:10px; bottom:10px; right:0;
+    width:3px; background:var(--wine);
+    border-radius:3px;
+  }
+  h2.section-title{
+    font-family:'Aref Ruqaa', serif;
+    font-size:26px;
+    color:var(--wine-dark);
+    margin-bottom:6px;
+  }
+  p.section-sub{
+    font-size:14px;
+    color:#6b6465;
+    margin-bottom:22px;
+  }
+  label.field-label{
+    display:block;
+    font-size:14px;
+    font-weight:700;
+    color:var(--charcoal);
+    margin-bottom:10px;
+    margin-top:20px;
+  }
+  label.field-label:first-of-type{margin-top:0;}
+
+  .chips{display:flex; flex-wrap:wrap; gap:10px;}
+  .chip{
+    padding:9px 16px;
+    border:1.5px solid var(--line);
+    border-radius:30px;
+    font-size:14px;
+    cursor:pointer;
+    background:#fff;
+    transition:.15s;
+    user-select:none;
+  }
+  .chip:hover{border-color:var(--gold);}
+  .chip.selected{
+    background:var(--wine);
+    color:#fff;
+    border-color:var(--wine);
+  }
+
+  .row2{display:flex; gap:14px;}
+  .row2 > div{flex:1;}
+  input[type=text], input[type=number], textarea{
+    width:100%;
+    padding:11px 14px;
+    border:1.5px solid var(--line);
+    border-radius:4px;
+    font-family:'Tajawal', sans-serif;
+    font-size:14px;
+    background:#fffdfb;
+  }
+  input:focus, textarea:focus{outline:2px solid var(--gold); outline-offset:1px;}
+  textarea{resize:vertical; min-height:70px;}
+
+  button.primary{
+    margin-top:26px;
+    width:100%;
+    padding:15px;
+    background:var(--wine);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    font-family:'Tajawal', sans-serif;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    letter-spacing:.5px;
+    transition:.15s;
+  }
+  button.primary:hover{background:var(--wine-dark);}
+  button.primary:disabled{background:#b9a6ab; cursor:wait;}
+
+  button.ghost{
+    background:none; border:1.5px solid var(--line); color:var(--charcoal);
+    padding:10px 18px; border-radius:4px; font-family:'Tajawal'; font-size:13px; cursor:pointer;
+  }
+
+  .profile-pill{
+    display:flex; align-items:center; justify-content:space-between;
+    background:#fff; border:1px solid var(--line); border-radius:30px;
+    padding:8px 18px; font-size:13px; margin-bottom:22px;
+  }
+  .profile-pill span.dot{color:var(--gold); margin:0 6px;}
+
+  .loader{
+    text-align:center; padding:50px 10px;
+  }
+  .thread{
+    width:60px; height:60px; margin:0 auto 18px;
+    border:3px dashed var(--gold);
+    border-radius:50%;
+    animation:spin 2.2s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loader p{color:#6b6465; font-size:14px;}
+
+  .result-card{margin-top:22px;}
+  .result-card h3{
+    font-family:'Aref Ruqaa', serif;
+    color:var(--wine-dark);
+    font-size:22px;
+    margin-bottom:14px;
+  }
+  .palette{display:flex; gap:8px; margin:14px 0 20px;}
+  .swatch{flex:1; height:44px; border-radius:4px; position:relative; border:1px solid rgba(0,0,0,0.06);}
+  .swatch span{
+    position:absolute; bottom:-20px; right:0; left:0; text-align:center;
+    font-size:10px; color:#6b6465;
+  }
+  .piece{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:14px 0; border-top:1px dashed var(--line);
+    gap:12px;
+  }
+  .piece:first-of-type{border-top:none;}
+  .piece .p-name{font-weight:700; font-size:14.5px;}
+  .piece .p-desc{font-size:13px; color:#6b6465; margin-top:3px; line-height:1.6;}
+  .piece .p-store{font-size:12px; color:var(--wine); margin-top:4px; font-weight:700;}
+  .piece .p-price{font-size:13px; font-weight:700; color:var(--sage); white-space:nowrap;}
+
+  .note{
+    margin-top:20px; padding:12px 14px; background:#F7EFEF; border-radius:4px;
+    font-size:12.5px; color:#6b4550; line-height:1.7;
+  }
+  .history-item{
+    padding:14px 16px; background:#fff; border:1px solid var(--line); border-radius:4px;
+    margin-top:12px; font-size:13px; cursor:pointer;
+  }
+  .history-item:hover{border-color:var(--gold);}
+  .back-link{
+    display:inline-block; margin-bottom:16px; font-size:13px; color:var(--wine); cursor:pointer; font-weight:700;
+  }
+  .newlook-btn{
+    margin-top:30px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">مستشارة الأناقة الخاصة بك</div>
+    <h1>تناسق</h1>
+    <p class="tag">قياساتك، مناسبتك، ميزانيتك — وتنسيق واحد يليق بها كلها</p>
+  </header>
+
+  <!-- SCREEN 1: WELCOME -->
+  <div class="screen active" id="screen-welcome">
+    <div class="card">
+      <h2 class="section-title">قبل ما نبدأ</h2>
+      <p class="section-sub">عشان أرشح لك تنسيقات تليق بجسمك فعلاً، أحتاج أعرف بعض المعلومات عنك أول مرة بس. بعدها ما راح أسألك عنها كل مرة.</p>
+      <button class="primary" onclick="goTo('profile')">لنبدأ ✦</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: PROFILE (ONCE) -->
+  <div class="screen" id="screen-profile">
+    <div class="card">
+      <h2 class="section-title">قياساتك وشكل جسمك</h2>
+      <p class="section-sub">هذا يساعدني أرشح لك القصّات والألوان الي تبرز جمال جسمك.</p>
+
+      <label class="field-label">شكل الجسم</label>
+      <div class="chips" id="bodyShapeChips">
+        <div class="chip" data-v="كمثري">كمثري</div>
+        <div class="chip" data-v="ساعة رملية">ساعة رملية</div>
+        <div class="chip" data-v="تفاحة">تفاحة</div>
+        <div class="chip" data-v="مستطيل">مستطيل</div>
+        <div class="chip" data-v="مثلث مقلوب">مثلث مقلوب</div>
+        <div class="chip" data-v="مو متأكدة">مو متأكدة</div>
+      </div>
+
+      <div class="row2">
+        <div>
+          <label class="field-label">الطول (سم)</label>
+          <input type="number" id="height" placeholder="مثال: 162">
+        </div>
+        <div>
+          <label class="field-label">المقاس المعتاد</label>
+          <input type="text" id="size" placeholder="مثال: M أو 40">
+        </div>
+      </div>
+
+      <label class="field-label">درجة لون البشرة (اختياري، يفيد في اختيار الألوان)</label>
+      <div class="chips" id="skinToneChips">
+        <div class="chip" data-v="فاتحة باردة">فاتحة باردة</div>
+        <div class="chip" data-v="فاتحة دافئة">فاتحة دافئة</div>
+        <div class="chip" data-v="متوسطة">متوسطة</div>
+        <div class="chip" data-v="سمراء">سمراء</div>
+        <div class="chip" data-v="داكنة">داكنة</div>
+      </div>
+
+      <button class="primary" onclick="saveProfile()">حفظ ومتابعة</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: MAIN DASHBOARD -->
+  <div class="screen" id="screen-main">
+    <div class="profile-pill">
+      <span id="profileSummary"></span>
+      <span onclick="goTo('profile')" style="cursor:pointer; color:var(--wine); font-weight:700;">تعديل</span>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">وش المناسبة؟</h2>
+      <p class="section-sub">صفي لي الإطلالة الي تبينها وراح أرشح لك القماش، الألوان، والتنسيق الكامل.</p>
+
+      <label class="field-label">المناسبة</label>
+      <div class="chips" id="occasionChips">
+        <div class="chip" data-v="زواج">زواج</div>
+        <div class="chip" data-v="خطوبة">خطوبة</div>
+        <div class="chip" data-v="مناسبة رسمية">مناسبة رسمية</div>
+        <div class="chip" data-v="عمل">عمل</div>
+        <div class="chip" data-v="كاجوال">كاجوال</div>
+        <div class="chip" data-v="سفر">سفر</div>
+      </div>
+
+      <label class="field-label">الفصل</label>
+      <div class="chips" id="seasonChips">
+        <div class="chip" data-v="صيف">صيف</div>
+        <div class="chip" data-v="شتاء">شتاء</div>
+        <div class="chip" data-v="ربيع">ربيع</div>
+        <div class="chip" data-v="خريف">خريف</div>
+      </div>
+
+      <label class="field-label">الميزانية (ريال سعودي)</label>
+      <div class="row2">
+        <div><input type="number" id="budgetMin" placeholder="من"></div>
+        <div><input type="number" id="budgetMax" placeholder="إلى"></div>
+      </div>
+
+      <label class="field-label">تفضيل البراند</label>
+      <div class="chips" id="brandChips">
+        <div class="chip" data-v="بدون تفضيل">بدون تفضيل</div>
+        <div class="chip" data-v="براندات معروفة">براندات معروفة</div>
+        <div class="chip" data-v="محلات بأسعار اقتصادية">محلات اقتصادية</div>
+      </div>
+
+      <label class="field-label">تفاصيل إضافية (اختياري)</label>
+      <textarea id="extraDetails" placeholder="مثال: أبي فستان زواج، ألوانه هادئة، وما أحب اللمعان الكثير"></textarea>
+
+      <button class="primary" onclick="submitRequest()">ابحثي لي عن تنسيق ✦</button>
+    </div>
+
+    <div id="resultArea"></div>
+
+    <div id="historyArea" style="margin-top:30px;"></div>
+  </div>
+
+</div>
+
+<script>
+let profile = {bodyShape:null, height:null, size:null, skinTone:null};
+let history = [];
+
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+screen).classList.add('active');
+}
+
+// chip selection (single-select per group)
+function setupChips(containerId, multi=false){
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      if(!multi){
+        container.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+      }
+      chip.classList.toggle('selected');
+    });
+  });
+}
+['bodyShapeChips','skinToneChips','occasionChips','seasonChips','brandChips'].forEach(id=>setupChips(id));
+
+function getSelected(containerId){
+  const el = document.getElementById(containerId).querySelector('.chip.selected');
+  return el ? el.dataset.v : null;
+}
+
+function saveProfile(){
+  profile.bodyShape = getSelected('bodyShapeChips') || 'غير محدد';
+  profile.height = document.getElementById('height').value || 'غير محدد';
+  profile.size = document.getElementById('size').value || 'غير محدد';
+  profile.skinTone = getSelected('skinToneChips') || 'غير محدد';
+
+  document.getElementById('profileSummary').innerText =
+    `${profile.bodyShape} ${profile.height!=='غير محدد' ? '· '+profile.height+' سم' : ''} ${profile.size!=='غير محدد' ? '· مقاس '+profile.size : ''}`;
+
+  goTo('main');
+}
+
+async function submitRequest(){
+  const occasion = getSelected('occasionChips');
+  const season = getSelected('seasonChips');
+  const budgetMin = document.getElementById('budgetMin').value;
+  const budgetMax = document.getElementById('budgetMax').value;
+  const brandPref = getSelected('brandChips');
+  const extra = document.getElementById('extraDetails').value;
+
+  if(!occasion){ alert('اختاري المناسبة أول'); return; }
+  if(!budgetMin || !budgetMax){ alert('حددي الميزانية عشان أرشح لك بدقة'); return; }
+
+  const btn = document.querySelector('#screen-main .primary');
+  btn.disabled = true;
+  btn.innerText = 'جارٍ البحث...';
+
+  const resultArea = document.getElementById('resultArea');
+  resultArea.innerHTML = `
+    <div class="loader">
+      <div class="thread"></div>
+      <p>أدور لك أفضل تنسيق يناسب ${occasion}...</p>
+    </div>`;
+
+  const prompt = `أنتِ مستشارة أزياء سعودية محترفة. المطلوب تنسيق كامل بناءً على المعطيات التالية:
+- شكل الجسم: ${profile.bodyShape}
+- الطول: ${profile.height}
+- المقاس: ${profile.size}
+- درجة البشرة: ${profile.skinTone}
+- المناسبة: ${occasion}
+- الفصل: ${season || 'غير محدد'}
+- الميزانية: من ${budgetMin} إلى ${budgetMax} ريال سعودي
+- تفضيل البراند: ${brandPref || 'بدون تفضيل'}
+- تفاصيل إضافية: ${extra || 'لا يوجد'}
+
+استخدمي أداة البحث على الإنترنت للتحقق من متاجر أو مواقع حقيقية (سعودية أو تشحن للسعودية) تناسب المناسبة والميزانية المذكورة، وأعطي أسعار تقديرية واقعية.
+
+رجعي الرد بصيغة JSON فقط بدون أي نص إضافي أو علامات markdown، بالشكل التالي بالضبط:
+{
+  "fabricAdvice": "نصيحة عن نوع القماش المناسب للفصل والمناسبة، جملتين إلى ثلاث",
+  "colorPalette": [{"name":"اسم اللون بالعربي","hex":"#xxxxxx"}, ... (٤ ألوان متناسقة تناسب درجة البشرة والمناسبة)],
+  "pieces": [
+    {"type":"الفستان/القطعة الرئيسية","description":"وصف القصة والتفاصيل بما يناسب شكل الجسم","priceRange":"مثال: 1200-1800 ريال","store":"اسم متجر أو موقع حقيقي مناسب للميزانية"},
+    {"type":"الحذاء","description":"...","priceRange":"...","store":"..."},
+    {"type":"الشنطة","description":"...","priceRange":"...","store":"..."},
+    {"type":"إكسسوار مكمل","description":"...","priceRange":"...","store":"..."}
+  ],
+  "note": "ملاحظة قصيرة ودودة، مثل التذكير بتجربة المقاس أو تأكيد التوفر قبل الشراء"
+}`;
+
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1500,
+        messages: [{ role: "user", content: prompt }],
+        tools: [{ type: "web_search_20250305", name: "web_search" }]
+      })
+    });
+    const data = await response.json();
+
+    if(!response.ok || data.type === 'error'){
+      throw new Error('رد الخادم: ' + (data.error ? (data.error.message || JSON.stringify(data.error)) : JSON.stringify(data)));
+    }
+    if(!data.content || !Array.isArray(data.content)){
+      throw new Error('رد غير متوقع من الخادم: ' + JSON.stringify(data).slice(0,300));
+    }
+
+    const textBlocks = data.content.filter(b=>b.type==='text').map(b=>b.text);
+    if(textBlocks.length === 0){
+      throw new Error('ما رجع أي نص من النموذج، فقط: ' + data.content.map(b=>b.type).join(', '));
+    }
+    // الجزء النهائي غالبًا هو الـ JSON (الأجزاء الأولى قد تكون تعليق أثناء البحث)
+    const lastText = textBlocks[textBlocks.length - 1];
+    const clean = lastText.replace(/```json|```/g,'').trim();
+    const jsonStart = clean.indexOf('{');
+    const jsonEnd = clean.lastIndexOf('}');
+    if(jsonStart === -1 || jsonEnd === -1){
+      throw new Error('ما قدرت ألقى JSON بالرد: ' + clean.slice(0,300));
+    }
+    const parsed = JSON.parse(clean.substring(jsonStart, jsonEnd+1));
+
+    renderResult(parsed, occasion, budgetMin, budgetMax);
+    history.unshift({occasion, budgetMin, budgetMax, data:parsed});
+    renderHistory();
+  }catch(err){
+    resultArea.innerHTML = `<div class="card"><p style="color:var(--wine); font-weight:700;">صار خطأ أثناء البحث:</p><p style="color:#6b6465; font-size:13px; margin-top:8px; word-break:break-word;">${err.message}</p><button class="ghost" style="margin-top:14px;" onclick="submitRequest()">حاولي مرة ثانية</button></div>`;
+  }finally{
+    btn.disabled = false;
+    btn.innerText = 'ابحثي لي عن تنسيق ✦';
+  }
+}
+
+function renderResult(d, occasion, min, max){
+  const resultArea = document.getElementById('resultArea');
+  const palette = (d.colorPalette||[]).map(c=>`
+    <div class="swatch" style="background:${c.hex};"><span>${c.name}</span></div>
+  `).join('');
+
+  const pieces = (d.pieces||[]).map(p=>`
+    <div class="piece">
+      <div>
+        <div class="p-name">${p.type}</div>
+        <div class="p-desc">${p.description}</div>
+        <div class="p-store">${p.store || ''}</div>
+      </div>
+      <div class="p-price">${p.priceRange || ''}</div>
+    </div>
+  `).join('');
+
+  resultArea.innerHTML = `
+    <div class="card result-card">
+      <h3>تنسيق ${occasion} · ${min}–${max} ريال</h3>
+      <p class="section-sub">${d.fabricAdvice || ''}</p>
+      <div class="palette">${palette}</div>
+      <div style="margin-top:26px;">${pieces}</div>
+      ${d.note ? `<div class="note">${d.note}</div>` : ''}
+    </div>
+  `;
+}
+
+function renderHistory(){
+  const el = document.getElementById('historyArea');
+  if(history.length <= 1){ el.innerHTML=''; return; }
+  el.innerHTML = '<h2 class="section-title" style="font-size:18px;">تنسيقاتك السابقة</h2>' +
+    history.slice(1).map((h,i)=>`
+      <div class="history-item" onclick="renderResult(history[${i+1}].data, history[${i+1}].occasion, history[${i+1}].budgetMin, history[${i+1}].budgetMax); window.scrollTo({top:0, behavior:'smooth'});">
+        ${h.occasion} — ${h.budgetMin} إلى ${h.budgetMax} ريال
+      </div>
+    `).join('');
+}
+</script>
+</body>
+</html>
