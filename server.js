@@ -149,7 +149,7 @@ async function getCredits(code) {
 }
 
 // ---------- الصفحة ----------
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'tanasuq-v2.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'tanasuq-board.html')));
 
 // ---------- الإعدادات العامة للواجهة ----------
 app.get('/api/config', (req, res) => {
