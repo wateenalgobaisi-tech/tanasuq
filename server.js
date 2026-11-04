@@ -82,6 +82,30 @@ try {
   STYLIST_SYSTEM = 'أنتِ منسّقة أزياء نسائية محترفة. ابتكري إطلالات راقية حسب بيانات العميلة ولا تخترعي منتجات أو روابط أو أسعارًا. أرجعي JSON فقط.';
 }
 
+// ===== المتاجر الموثوقة فقط: أي قطعة من خارج هذي القائمة تُحذف تلقائيًا =====
+const ALLOWED_STORE_DOMAINS = [
+  'zara.com', 'hm.com', 'bershka.com', 'mango.com', 'asos.com', 'newyorker.de', 'newyorker.com',
+  'namshi.com', 'noon.com', 'amazon.sa', 'amazon.ae', 'amazon.com', 'ounass.com', 'ounass.sa', 'ounass.ae',
+  'farfetch.com', 'femme9.com', 'maxfashion.com', 'pullandbear.com', 'massimodutti.com', 'stradivarius.com',
+  'aldoshoes.com', 'charleskeith.com', 'stevemadden.com', 'ninewest.com'
+];
+function storeAllowed(url) {
+  try {
+    const h = new URL(url).hostname.toLowerCase();
+    return h.includes('femme9') || ALLOWED_STORE_DOMAINS.some(d => h === d || h.endsWith('.' + d));
+  } catch (e) { return false; }
+}
+function keepTrustedItems(result) {
+  const options = Array.isArray(result.options) ? result.options.slice(0, 3) : [];
+  const cleaned = options.map(o => ({
+    ...o,
+    items: (Array.isArray(o.items) ? o.items : []).filter(it => it && storeAllowed(it.productUrl))
+  })).filter(o => o.items.length > 0);
+  return { ...result, options: cleaned };
+}
+
+STYLIST_SYSTEM += '\n\n========== قاعدة صارمة للمتاجر ==========\nاختاري القطع فقط من المتاجر المعروفة والموثوقة التالية: Zara, H&M, Bershka, Mango, ASOS, New Yorker, Namshi, Noon, Amazon.sa, Ounass, Farfetch, Femme9, Max Fashion, Pull&Bear, Massimo Dutti, Stradivarius, Aldo, Charles & Keith, Steve Madden, Nine West. ممنوع أي موقع خارج هذي القائمة. لا تكتبين سعرًا من عندك: السعر كما يظهر في صفحة المنتج.';
+
 const MOODS = [
   'ألوان ترابية دافئة مع لمسة معدنية', 'أخضر زيتوني أو زمردي مع ذهبي', 'باستيل ناعم (وردي مغبر، لافندر، بيج)',
   'أزرق ملكي أو كحلي مع فضي', 'نبيتي أو عنابي مع ذهبي', 'عاجي أو شمپاني بأقمشة لامعة هادئة',
@@ -108,7 +132,7 @@ async function getCredits(code) {
 }
 
 // ---------- الصفحة ----------
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'tanasuq-v2.html')));
 
 // ---------- الإعدادات العامة للواجهة ----------
 app.get('/api/config', (req, res) => {
@@ -250,7 +274,8 @@ app.post('/api/generate-look', async (req, res) => {
     if (!response.ok) throw new Error(data?.error?.message || 'خطأ من الخدمة');
 
     const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
-    const result = extractJson(text);
+    const result = keepTrustedItems(extractJson(text));
+    if (!result.options.length) throw new Error('ما لقيت قطع من متاجر موثوقة، حاولي مرة ثانية');
     charged = false; // نجح الطلب: الخصم نهائي
     res.json({ ...result, credits: creditsLeft });
   } catch (err) {
