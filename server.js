@@ -15,6 +15,8 @@ const MOYASAR_METHODS = (process.env.MOYASAR_METHODS || 'creditcard').split(',')
 const WEBHOOK_SECRET = process.env.MOYASAR_WEBHOOK_SECRET || '';
 const OWNER_CODE = String(process.env.OWNER_CODE || '').trim().toUpperCase();                // كود خاص بصاحبة الموقع للتجربة بدون دفع
 const DATABASE_URL = process.env.DATABASE_URL || '';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';                                  // مفتاح توليد الصور (Google AI Studio)
+const GEMINI_IMAGE_MODEL = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.5-flash-image';
 
 // الباقات: السعر بالهللات (500 = 5 ريال)
 const PLANS = {
@@ -96,7 +98,7 @@ function storeAllowed(url) {
   } catch (e) { return false; }
 }
 function keepTrustedItems(result) {
-  const options = Array.isArray(result.options) ? result.options.slice(0, 3) : [];
+  const options = Array.isArray(result.options) ? result.options.slice(0, 1) : [];
   const cleaned = options.map(o => ({
     ...o,
     items: (Array.isArray(o.items) ? o.items : []).filter(it => it && storeAllowed(it.productUrl))
@@ -141,6 +143,34 @@ function extractJson(text) {
 }
 
 
+// توليد صورة واقعية للإطلالة (إذا فشلت نرجع بدون صورة والواجهة ترسم لوحة بديلة)
+async function generateLookImage(imagePrompt) {
+  if (!GEMINI_API_KEY || !imagePrompt) return null;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 70000);
+  try {
+    const prompt = 'Photorealistic full-length fashion editorial photograph of an elegant woman model wearing this complete outfit, standing, soft professional studio lighting, clean neutral background, high-end fashion magazine quality, sharp details on fabric, natural skin, no text, no logo, no watermark. Outfit and model: ' + String(imagePrompt).slice(0, 1500);
+    const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(GEMINI_IMAGE_MODEL) + ':generateContent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+      }),
+      signal: ctrl.signal
+    });
+    const d = await r.json();
+    if (!r.ok) { console.error('Image API error:', (d && d.error && d.error.message) || r.status); return null; }
+    const parts = (((d.candidates || [])[0] || {}).content || {}).parts || [];
+    for (const p of parts) {
+      const inl = p.inlineData || p.inline_data;
+      if (inl && inl.data) return 'data:' + (inl.mimeType || inl.mime_type || 'image/png') + ';base64,' + inl.data;
+    }
+    return null;
+  } catch (e) { console.error('Image generation failed:', e.message); return null; }
+  finally { clearTimeout(timer); }
+}
+
 async function getCredits(code) {
   if (OWNER_CODE && code === OWNER_CODE) return { credits: 9999, owner: true };
   if (!pool || !code) return null;
@@ -149,7 +179,7 @@ async function getCredits(code) {
 }
 
 // ---------- الصفحة ----------
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'tanasuq-board.html')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'tanasuq-model.html')));
 
 // ---------- الإعدادات العامة للواجهة ----------
 app.get('/api/config', (req, res) => {
@@ -293,6 +323,9 @@ app.post('/api/generate-look', async (req, res) => {
     const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
     const result = keepTrustedItems(extractJson(text));
     if (!result.options.length) throw new Error('ما لقيت قطع من متاجر موثوقة، حاولي مرة ثانية');
+    const imageData = await generateLookImage(result.options[0].imagePrompt);
+    if (imageData) result.options[0].imageData = imageData;
+    delete result.options[0].imagePrompt;
     charged = false; // نجح الطلب: الخصم نهائي
     res.json({ ...result, credits: creditsLeft });
   } catch (err) {
